@@ -45,13 +45,13 @@ function buildCharts() {
     d3.json("samples.json").then((data) => {
 
         // Parsing and filtering the data to get the sample's OTU data
-        let otuIds = data.samples[0].otu_ids.slice(0,10).reverse();
+        let otuIds = data.samples[0].otu_ids.slice(0, 10).reverse();
         // console.log(otuIds)
-        let values = data.samples[0].sample_values.slice(0,10).reverse();
+        let values = data.samples[0].sample_values.slice(0, 10).reverse();
         // console.log(values)
         let labels = otuIds.map(i => "OTU " + i);
-        // console.log(labels)
-        let otuLabels = data.samples[0].otu_labels.slice(0,10).reverse();
+        console.log(labels)
+        let otuLabels = data.samples[0].otu_labels.slice(0, 10).reverse();
 
         // Pay attention to what data is required for each chart
 
@@ -62,50 +62,38 @@ function buildCharts() {
             text: otuLabels,
             type: "bar",
             orientation: "h"
-          };
+        };
 
-          let traceData1 = [trace1];
+        let traceData1 = [trace1];
 
-          let layout = {
+        let layout = {
             height: 500,
             width: 600
-          };
-          Plotly.newPlot("bar", traceData1, layout);
-
-        //   d3.selectAll("#bar").append("div");
+        };
+        Plotly.newPlot("bar", traceData1, layout);
 
         // Create bubble chart in correct location
-        // let bubbleOtu = data.samples[0].otu_ids.slice(0,10).reverse();
-        
+        let bubbleIds = data.samples[0].otu_ids;
+        let bubbleValues = data.samples[0].sample_values;
+        let bubbleLabels = data.samples[0].otu_labels;
+
         let trace2 = {
-            x: otuIds,
-            y: values,
-            text: otuLabels,
+            x: bubbleIds,
+            y: bubbleValues,
+            text: bubbleLabels,
             type: "bubble",
             mode: "markers",
             marker: {
-                size: values,
-                color: values,
+                size: bubbleValues,
+                color: bubbleIds,
             }
 
-          };
+        };
 
-          let traceData2 = [trace2];
+        let traceData2 = [trace2];
 
-          Plotly.newPlot("bubble", traceData2);
+        Plotly.newPlot("bubble", traceData2);
     });
-}
-
-function getData() {
-    // Use D3 to select the dropdown menu
-    let dropdown = d3.select("#selDataset");
-
-    let dataset = dropdown.property("value");
-    let data = [];
-    if (dataset == data.names[0]) {
-        data = buildCharts(data.names[0]);
-    }
-
 }
 
 function optionChanged(sample) {
@@ -115,7 +103,7 @@ function optionChanged(sample) {
     buildMetadata(sample);
 
     // Update charts with newly selected sample
-    buildCharts(sample)
+    buildCharts(sample);
 
 }
 
