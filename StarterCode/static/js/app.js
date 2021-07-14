@@ -39,7 +39,7 @@ function buildMetadata(id) {
 }
 
 // Defining a function that will create charts for given sample
-function buildCharts(id) {
+function buildCharts() {
 
     // Reading the json data
     d3.json("samples.json").then((data) => {
@@ -50,7 +50,8 @@ function buildCharts(id) {
         let values = data.samples[0].sample_values.slice(0,10).reverse();
         // console.log(values)
         let labels = otuIds.map(i => "OTU " + i);
-        console.log(labels)
+        // console.log(labels)
+        let otuLabels = data.samples[0].otu_labels.slice(0,10).reverse();
 
         // Pay attention to what data is required for each chart
 
@@ -58,6 +59,7 @@ function buildCharts(id) {
         let trace1 = {
             x: values,
             y: labels,
+            text: otuLabels,
             type: "bar",
             orientation: "h"
           };
@@ -73,10 +75,10 @@ function buildCharts(id) {
         //   d3.selectAll("#bar").append("div");
 
         // Create bubble chart in correct location
-        let bubbleOtu = data.samples[0].otu_ids.slice(0,10).reverse();
-        let otuLabels = data.samples[0].otu_labels;
+        // let bubbleOtu = data.samples[0].otu_ids.slice(0,10).reverse();
+        
         let trace2 = {
-            x: bubbleOtu,
+            x: otuIds,
             y: values,
             text: otuLabels,
             type: "bubble",
@@ -84,28 +86,23 @@ function buildCharts(id) {
             marker: {
                 size: values,
                 color: values,
-                // text: otuLabels
             }
 
           };
 
           let traceData2 = [trace2];
 
-        //   let layout = {
-        //     height: 500,
-        //     width: 600
-        //   };
           Plotly.newPlot("bubble", traceData2);
     });
 }
 
 function getData() {
     // Use D3 to select the dropdown menu
-    let dropdownMenu = d3.select("#selDataset");
+    let dropdown = d3.select("#selDataset");
 
-    let dataset = dropdownMenu.property("value");
+    let dataset = dropdown.property("value");
     let data = [];
-    if (dataset == buildMetadata(data.names[0])) {
+    if (dataset == data.names[0]) {
         data = buildCharts(data.names[0]);
     }
 
