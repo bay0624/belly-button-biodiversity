@@ -39,19 +39,19 @@ function buildMetadata(id) {
 }
 
 // Defining a function that will create charts for given sample
-function buildCharts() {
+function buildCharts(id) {
 
     // Reading the json data
     d3.json("samples.json").then((data) => {
-
+        let chartData = data.samples.find(list => list.id === id);
         // Parsing and filtering the data to get the sample's OTU data
-        let otuIds = data.samples[0].otu_ids.slice(0, 10).reverse();
+        let otuIds = chartData.otu_ids.slice(0, 10).reverse();
         // console.log(otuIds)
-        let values = data.samples[0].sample_values.slice(0, 10).reverse();
+        let values = chartData.sample_values.slice(0, 10).reverse();
         // console.log(values)
         let labels = otuIds.map(i => "OTU " + i);
         console.log(labels)
-        let otuLabels = data.samples[0].otu_labels.slice(0, 10).reverse();
+        let otuLabels = chartData.otu_labels.slice(0, 10).reverse();
 
         // Pay attention to what data is required for each chart
 
@@ -73,9 +73,9 @@ function buildCharts() {
         Plotly.newPlot("bar", traceData1, layout);
 
         // Create bubble chart in correct location
-        let bubbleIds = data.samples[0].otu_ids;
-        let bubbleValues = data.samples[0].sample_values;
-        let bubbleLabels = data.samples[0].otu_labels;
+        let bubbleIds = chartData.otu_ids;
+        let bubbleValues = chartData.sample_values;
+        let bubbleLabels = chartData.otu_labels;
 
         let trace2 = {
             x: bubbleIds,
@@ -96,14 +96,14 @@ function buildCharts() {
     });
 }
 
-function optionChanged(sample) {
+function optionChanged(newId) {
     // The parameter being passed in this function is new sample id from dropdown menu
-
+    console.log(newId);
     // Update metadata with newly selected sample
-    buildMetadata(sample);
+    buildMetadata(newId);
 
     // Update charts with newly selected sample
-    buildCharts(sample);
+    buildCharts(newId);
 
 }
 
