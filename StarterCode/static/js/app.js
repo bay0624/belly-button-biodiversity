@@ -55,32 +55,59 @@ function buildCharts(id) {
         // Pay attention to what data is required for each chart
 
         // Create bar chart in correct location
-        let trace = {
+        let trace1 = {
             x: values,
             y: labels,
             type: "bar",
             orientation: "h"
           };
 
-          let traceData = [trace];
+          let traceData1 = [trace1];
 
           let layout = {
             height: 500,
             width: 600
           };
-          Plotly.newPlot("bar", traceData, layout);
+          Plotly.newPlot("bar", traceData1, layout);
 
-          d3.selectAll("#selDataset").on("change", getData);
+        //   d3.selectAll("#bar").append("div");
 
         // Create bubble chart in correct location
+        let bubbleOtu = data.samples[0].otu_ids.slice(0,10).reverse();
+        let otuLabels = data.samples[0].otu_labels;
+        let trace2 = {
+            x: bubbleOtu,
+            y: values,
+            text: otuLabels,
+            type: "bubble",
+            mode: "markers",
+            marker: {
+                size: values,
+                color: values,
+                // text: otuLabels
+            }
+
+          };
+
+          let traceData2 = [trace2];
+
+        //   let layout = {
+        //     height: 500,
+        //     width: 600
+        //   };
+          Plotly.newPlot("bubble", traceData2);
     });
 }
 
 function getData() {
     // Use D3 to select the dropdown menu
     let dropdownMenu = d3.select("#selDataset");
-    // Assign the value of the dropdown menu option to a letiable
+
     let dataset = dropdownMenu.property("value");
+    let data = [];
+    if (dataset == buildMetadata(data.names[0])) {
+        data = buildCharts(data.names[0]);
+    }
 
 }
 
