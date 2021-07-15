@@ -5,6 +5,7 @@ function init() {
     d3.json("samples.json").then((data) => {
 
         // Parsing and filtering data to get sample ids
+
         // Moving sample ids to dropdown menu
         let dropdown = d3.select("#selDataset")
         data.names.forEach(function (idNumber) {
@@ -25,7 +26,6 @@ function buildMetadata(id) {
     d3.json("samples.json").then((data) => {
 
         // Parsing and filtering the data to get the sample's metadata
-
         let res = data.metadata.filter(info => info.id.toString() === id)[0];
 
         // Specifying the location of the metadata and updating it
@@ -44,18 +44,14 @@ function buildCharts(id) {
     // Reading the json data
     d3.json("samples.json").then((data) => {
         let chartData = data.samples.find(list => list.id === id);
+
         // Parsing and filtering the data to get the sample's OTU data
         let otuIds = chartData.otu_ids.slice(0, 10).reverse();
-        // console.log(otuIds)
         let values = chartData.sample_values.slice(0, 10).reverse();
-        // console.log(values)
         let labels = otuIds.map(i => "OTU " + i);
-        console.log(labels)
         let otuLabels = chartData.otu_labels.slice(0, 10).reverse();
 
-        // Pay attention to what data is required for each chart
-
-        // Create bar chart in correct location
+        // Creating bar chart
         let trace1 = {
             x: values,
             y: labels,
@@ -72,7 +68,7 @@ function buildCharts(id) {
         };
         Plotly.newPlot("bar", traceData1, layout);
 
-        // Create bubble chart in correct location
+        // Creating bubble chart 
         let bubbleIds = chartData.otu_ids;
         let bubbleValues = chartData.sample_values;
         let bubbleLabels = chartData.otu_labels;
@@ -92,21 +88,28 @@ function buildCharts(id) {
 
         let traceData2 = [trace2];
 
-        Plotly.newPlot("bubble", traceData2);
+        let layout2 = {
+            xaxis: { 
+                title: 
+                { text: "OTU ID" } }
+        };
+
+        Plotly.newPlot("bubble", traceData2, layout2);
+
     });
 }
 
+
 function optionChanged(newId) {
     // The parameter being passed in this function is new sample id from dropdown menu
-    console.log(newId);
-    // Update metadata with newly selected sample
+
+    // Updating metadata with newly selected sample
     buildMetadata(newId);
 
-    // Update charts with newly selected sample
+    // Updating charts with newly selected sample
     buildCharts(newId);
 
 }
 
 // Initialize dashboard on page load
 init();
-
