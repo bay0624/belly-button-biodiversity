@@ -60,13 +60,14 @@ function buildCharts(id) {
             orientation: "h"
         };
 
+        let layout = {
+            title: { text: "<b>Top 10 OTUs in Test Subject</b>", font: { size: 16 } },
+            font: { color: "#181818", family: "Verdana" }
+        }
+
         let traceData1 = [trace1];
 
-        // let layout = {
-        //     height: 500,
-        //     width: 600
-        // };
-        Plotly.newPlot("bar", traceData1);
+        Plotly.newPlot("bar", traceData1, layout);
 
         // Creating bubble chart 
         let bubbleIds = chartData.otu_ids;
@@ -83,51 +84,61 @@ function buildCharts(id) {
                 size: bubbleValues,
                 color: bubbleIds,
             }
-
         };
 
         let traceData2 = [trace2];
 
         let layout2 = {
+            title: { text: "<b>Bubble Chart for Each Sample</b>", font: { size: 16 } },
             xaxis: {
                 title:
                     { text: "OTU ID" }
-            }
+            },
+
+            font: { color: "#181818", family: "Verdana" }
         };
 
         Plotly.newPlot("bubble", traceData2, layout2);
 
     });
 
-    // Creating Gauge Chart
+    // Creating gauge chart
     d3.json("samples.json").then((data) => {
         let washData = data.metadata.filter(i => i.id.toString() === id);
         wash = washData[0].wfreq;
         // console.log(wash);
 
-        var data = [
+        let gaugeData = [
             {
-                domain: { x: [0, 1], y: [0, 1] },
-                value: wash,
-                // title: { text: "Belly Button Washing Frequency" },
                 type: "indicator",
-                mode: "gauge+number"
+                mode: "gauge+number",
+                value: wash,
+                gauge: {
+                    bar: { color: "steelblue" },
+                    bgcolor: "white",
+                    borderwidth: 2,
+                    bordercolor: "gray",
+                    steps: [
+                        { range: [0, 9], color: "white" }
+                    ],
+                }
             }
         ];
-        
-        var layout = {
-            width: 500,
+
+        let layout = {
+            width: 450,
             height: 400,
-            margin: { t: 0, b: 0 }
+            paper_bgcolor: "whitesmoke",
+            title: { text: "<b>Belly Button Washing Frequency</b><br>Scrubs per Week", font: { size: 16 } },
+            font: { color: "#181818", family: "Verdana" }
         };
-        Plotly.newPlot("gauge", data, layout);
-        
+        Plotly.newPlot("gauge", gaugeData, layout);
+
     });
 }
 
-
+// The parameter being passed in this function is new sample id from dropdown menu
 function optionChanged(newId) {
-    // The parameter being passed in this function is new sample id from dropdown menu
 
     // Updating metadata with newly selected sample
     buildMetadata(newId);
