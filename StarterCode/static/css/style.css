@@ -1,0 +1,18 @@
+/* .vtop {
+    display: inline-block;
+    vertical-align: top;
+    float: none;
+} */
+
+strong {
+    color: #2b2d2f;
+    font-family: 'Verdana';
+    font-weight: bold;
+    font-size: 16px;
+}
+
+subtitle {
+    color: #2b2d2f;
+    font-family: 'Verdana';
+    font-size: 14px;
+}
