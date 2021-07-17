@@ -62,11 +62,11 @@ function buildCharts(id) {
 
         let traceData1 = [trace1];
 
-        let layout = {
-            height: 500,
-            width: 600
-        };
-        Plotly.newPlot("bar", traceData1, layout);
+        // let layout = {
+        //     height: 500,
+        //     width: 600
+        // };
+        Plotly.newPlot("bar", traceData1);
 
         // Creating bubble chart 
         let bubbleIds = chartData.otu_ids;
@@ -89,13 +89,39 @@ function buildCharts(id) {
         let traceData2 = [trace2];
 
         let layout2 = {
-            xaxis: { 
-                title: 
-                { text: "OTU ID" } }
+            xaxis: {
+                title:
+                    { text: "OTU ID" }
+            }
         };
 
         Plotly.newPlot("bubble", traceData2, layout2);
 
+    });
+
+    // Creating Gauge Chart
+    d3.json("samples.json").then((data) => {
+        let washData = data.metadata.filter(i => i.id.toString() === id);
+        wash = washData[0].wfreq;
+        // console.log(wash);
+
+        var data = [
+            {
+                domain: { x: [0, 1], y: [0, 1] },
+                value: wash,
+                // title: { text: "Belly Button Washing Frequency" },
+                type: "indicator",
+                mode: "gauge+number"
+            }
+        ];
+        
+        var layout = {
+            width: 500,
+            height: 400,
+            margin: { t: 0, b: 0 }
+        };
+        Plotly.newPlot("gauge", data, layout);
+        
     });
 }
 
